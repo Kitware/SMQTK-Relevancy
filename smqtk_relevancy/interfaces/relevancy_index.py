@@ -1,6 +1,6 @@
 import abc
 
-from smqtk.algorithms import SmqtkAlgorithm
+from smqtk_core import Plugfigurable
 
 
 class NoIndexError (Exception):
@@ -10,7 +10,7 @@ class NoIndexError (Exception):
     """
 
 
-class RelevancyIndex (SmqtkAlgorithm):
+class RelevancyIndex (Plugfigurable):
     """
     Abstract class for IQR index implementations.
 

@@ -2,13 +2,13 @@ from typing import Hashable, Sequence, Tuple
 
 from numpy import ndarray
 
-from smqtk.utils.configuration import (
+from smqtk_core.configuration import (
     from_config_dict,
     make_default_config,
     to_config_dict,
 )
-from smqtk.utils.dict import merge_dict
-from ._interface import RankRelevancy, RankRelevancyWithFeedback
+from smqtk_core.dict import merge_dict
+from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy, RankRelevancyWithFeedback
 
 
 class RankRelevancyWithMarginSampledFeedback(RankRelevancyWithFeedback):

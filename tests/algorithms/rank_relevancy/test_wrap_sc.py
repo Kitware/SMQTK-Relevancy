@@ -3,10 +3,10 @@ from unittest import mock
 
 import numpy as np
 
-from smqtk.algorithms.rank_relevancy.wrap_classifier import (
+from smqtk_relevancy.impls.wrap_classifier import (
     RankRelevancyWithSupervisedClassifier,
 )
-from smqtk.algorithms import SupervisedClassifier
+from smqtk_classifier import SupervisedClassifier
 
 
 def test_is_usable():

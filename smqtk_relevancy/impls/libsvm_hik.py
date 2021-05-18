@@ -7,12 +7,12 @@ import six
 from six.moves import range, zip
 from six.moves import cPickle as pickle
 
-from smqtk.algorithms.relevancy_index import RelevancyIndex
-from smqtk.representation.descriptor_element import DescriptorElement
-from smqtk.utils.distance_kernel import (
+from smqtk_relevancy.interfaces.relevancy_index import RelevancyIndex
+from smqtk_descriptors import DescriptorElement
+from smqtk_relevancy.utils.distance_kernel import (
     compute_distance_matrix
 )
-from smqtk.utils.metrics import histogram_intersection_distance
+from smqtk_indexing.utils.metrics import histogram_intersection_distance
 
 try:
     import svm  # type: ignore
