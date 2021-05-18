@@ -3,7 +3,7 @@ import unittest
 
 import unittest.mock as mock
 
-from smqtk.algorithms.relevancy_index import RelevancyIndex
+from smqtk_relevancy.interfaces.relevancy_index import RelevancyIndex
 
 
 class DummyRI (RelevancyIndex):

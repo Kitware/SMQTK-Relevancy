@@ -5,11 +5,11 @@ import unittest.mock as mock
 import numpy as np
 import pytest
 
-from smqtk.algorithms.relevancy_index.classifier_wrapper import \
+from smqtk_relevancy.impls.classifier_wrapper import \
     SupervisedClassifierRelevancyIndex, NoIndexError
-from smqtk.algorithms import SupervisedClassifier
-from smqtk.representation import DescriptorElement
-from smqtk.representation.descriptor_element.local_elements import \
+from smqtk_classifier import SupervisedClassifier
+from smqtk_descriptors import DescriptorElement
+from smqtk_descriptors.impls.descriptor_element.memory import \
     DescriptorMemoryElement
 
 

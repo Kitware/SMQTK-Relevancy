@@ -3,10 +3,10 @@ from typing import Hashable, Sequence, Tuple
 
 from numpy import ndarray
 
-from smqtk.algorithms import SmqtkAlgorithm
+from smqtk_core import Plugfigurable
 
 
-class RankRelevancy (SmqtkAlgorithm):
+class RankRelevancy (Plugfigurable):
     """
     Algorithm that can rank a given pool of descriptors based on positively
     and negatively adjudicated descriptors.
@@ -37,7 +37,7 @@ class RankRelevancy (SmqtkAlgorithm):
         """
 
 
-class RankRelevancyWithFeedback (SmqtkAlgorithm):
+class RankRelevancyWithFeedback (Plugfigurable):
     """
     Similar to the :class:`RankRelevancy` algorithm but with the added feature
     of also returning a sequence of elements from which feedback would be "most

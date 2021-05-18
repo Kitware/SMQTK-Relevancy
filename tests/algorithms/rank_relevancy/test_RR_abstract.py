@@ -3,7 +3,7 @@ from unittest import mock
 import numpy
 import pytest
 
-from smqtk.algorithms import RankRelevancyWithFeedback
+from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancyWithFeedback
 
 
 class DummyRRWF(RankRelevancyWithFeedback):

@@ -1,7 +1,7 @@
 import numpy
 
-from smqtk.algorithms import RankRelevancy
-from smqtk.algorithms.rank_relevancy.margin_sampling import (
+from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
+from smqtk_relevancy.impls.margin_sampling import (
     RankRelevancyWithMarginSampledFeedback,
 )
 

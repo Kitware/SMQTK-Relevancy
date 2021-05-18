@@ -1,15 +1,16 @@
 import numpy as np
 from six.moves import zip
 
-from smqtk.algorithms import SupervisedClassifier
-from smqtk.representation import DescriptorElement
-from smqtk.utils.configuration import (
+from smqtk_classifier import SupervisedClassifier
+from smqtk_descriptors import DescriptorElement
+from smqtk_core.configuration import (
     from_config_dict,
     make_default_config,
     cls_conf_to_config_dict,
 )
 
-from . import RelevancyIndex, NoIndexError
+from smqtk_relevancy.interfaces.relevancy_index import \
+    RelevancyIndex, NoIndexError
 
 
 class SupervisedClassifierRelevancyIndex (RelevancyIndex):
