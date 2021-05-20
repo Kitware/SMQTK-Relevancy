@@ -12,13 +12,12 @@ license = "BSD-3-Clause"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-setuptools = ">=53"
 numpy = "^1.19.5"
 pillow = "^8.2.0"
 smqtk-core = ">=0.18.0"
-smqtk-dataprovider = ">=0.15.0"
-smqtk-classifier = ">=0.15.0"
-smqtk-indexing = ">=0.15.0"
+smqtk-dataprovider = ">=0.16.0"
+smqtk-classifier = ">=0.16.0"
+smqtk-indexing = ">=0.16.0"
 
 [tool.poetry.dev-dependencies]
 # CI
@@ -37,6 +36,9 @@ coverage = "^5.5"
 mock = "^4.0.3"
 pytest = "^6.2.2"
 pytest-cov = "^2.11.1"
+# Development
+ipython = "^7.16"
+jedi = "^0.17"
 
 ###############################################################################
 [tool.pytest.ini_options]
@@ -44,6 +46,8 @@ addopts = [
     "-lv",                  # Show local in trace-backs.
     "--doctest-modules",    # Increased verbosity.
     "--tb=long",            # Trace-back print mode.
+    "--cov=smqtk_relevancy",# Cover our package specifically
+    "--cov-report=term",    # Coverage report to terminal
 ]
 testpaths = [
     "tests",
