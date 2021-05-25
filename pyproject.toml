@@ -1,0 +1,59 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+###############################################################################
+[tool.poetry]
+name = "smqtk_relevancy"
+version = "0.15.0"
+description = "SMQTK Relevancy"
+authors = ["Kitware, Inc. <smqtk-developers@kitware.com>"]
+license = "BSD-3-Clause"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+numpy = "^1.19.5"
+pillow = "^8.2.0"
+smqtk-core = ">=0.18.0"
+smqtk-dataprovider = ">=0.16.0"
+smqtk-classifier = ">=0.16.0"
+smqtk-indexing = ">=0.16.0"
+
+[tool.poetry.dev-dependencies]
+# CI
+flake8 = "^3.9.0"
+flake8-mutable = "^1.2.0"
+mypy = "^0.812"
+# Docs
+# - Also see: `docs/readthedocs-reqs.txt` for use by RTD
+Sphinx = "^3.5.3"
+sphinx-rtd-theme = "^0.5.1"
+sphinx-argparse = "^0.2.5"
+sphinx-prompt = "^1.4.0"
+livereload = "^2.6.3"
+# Testing
+coverage = "^5.5"
+mock = "^4.0.3"
+pytest = "^6.2.2"
+pytest-cov = "^2.11.1"
+# Development
+ipython = "^7.16"
+jedi = "^0.17"
+
+###############################################################################
+[tool.pytest.ini_options]
+addopts = [
+    "-lv",                  # Show local in trace-backs.
+    "--doctest-modules",    # Increased verbosity.
+    "--tb=long",            # Trace-back print mode.
+    "--cov=smqtk_relevancy",# Cover our package specifically
+    "--cov-report=term",    # Coverage report to terminal
+]
+testpaths = [
+    "tests",
+    "smqtk_relevancy",
+]
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "IGNORE_EXCEPTION_DETAIL",
+]

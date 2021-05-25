@@ -4,10 +4,10 @@ import unittest
 import numpy as np
 import pytest
 
-from smqtk.representation.descriptor_element.local_elements import \
+from smqtk_descriptors.impls.descriptor_element.memory import \
     DescriptorMemoryElement
-from smqtk.algorithms.relevancy_index.libsvm_hik import LibSvmHikRelevancyIndex
-from smqtk.utils.configuration import configuration_test_helper
+from smqtk_relevancy.impls.libsvm_hik import LibSvmHikRelevancyIndex
+from smqtk_core.configuration import configuration_test_helper
 
 
 @pytest.mark.skipif(not LibSvmHikRelevancyIndex.is_usable(),

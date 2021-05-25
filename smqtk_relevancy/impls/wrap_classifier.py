@@ -2,18 +2,16 @@ from typing import Sequence
 
 import numpy as np
 
-from smqtk.algorithms import SupervisedClassifier
-from smqtk.representation import DescriptorElement
-from smqtk.representation.descriptor_element.local_elements import (
-    DescriptorMemoryElement,
-)
-from smqtk.utils.configuration import (
+from smqtk_classifier import SupervisedClassifier
+from smqtk_descriptors import DescriptorElement
+from smqtk_descriptors.impls.descriptor_element.memory import DescriptorMemoryElement
+from smqtk_core.configuration import (
     from_config_dict,
     make_default_config,
     cls_conf_to_config_dict,
 )
 
-from . import RankRelevancy
+from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
 
 
 class RankRelevancyWithSupervisedClassifier(RankRelevancy):
