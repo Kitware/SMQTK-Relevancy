@@ -1,6 +1,8 @@
 import abc
+from typing import Iterable, Dict
 
 from smqtk_core import Plugfigurable
+from smqtk_descriptors import DescriptorElement
 
 
 class NoIndexError (Exception):
@@ -21,18 +23,18 @@ class RelevancyIndex (Plugfigurable):
 
     """
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.count()
 
     @abc.abstractmethod
-    def count(self):
+    def count(self) -> int:
         """
         :return: Number of elements in this index.
         :rtype: int
         """
 
     @abc.abstractmethod
-    def build_index(self, descriptors):
+    def build_index(self, descriptors: Iterable[DescriptorElement]) -> None:
         """
         Build the index based on the given iterable of descriptor elements.
 
@@ -47,7 +49,8 @@ class RelevancyIndex (Plugfigurable):
         """
 
     @abc.abstractmethod
-    def rank(self, pos, neg):
+    def rank(self, pos: Iterable[DescriptorElement],
+             neg: Iterable[DescriptorElement]) -> Dict[DescriptorElement, float]:
         """
         Rank the currently indexed elements given ``pos`` positive and ``neg``
         negative exemplar descriptor elements.

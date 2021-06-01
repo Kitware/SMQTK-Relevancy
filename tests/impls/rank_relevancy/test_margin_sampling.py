@@ -1,30 +1,32 @@
 import numpy
+from typing import Dict, List, Sequence, Iterable
 
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
-from smqtk_relevancy.impls.margin_sampling import (
+from smqtk_relevancy.impls.rank_relevancy.margin_sampling import (
     RankRelevancyWithMarginSampledFeedback,
 )
+from smqtk_descriptors import DescriptorElement
 
 
-def test_is_usable():
+def test_is_usable() -> None:
     assert RankRelevancyWithMarginSampledFeedback.is_usable()
 
 
 class DummyRankRelevancy(RankRelevancy):
-    def get_config(self):
+    def get_config(self) -> Dict:
         return {}
 
-    def rank(self, pos, neg, pool):
+    def rank(self, pos: Iterable[DescriptorElement], neg: Iterable[DescriptorElement], pool: Sequence) -> List:
         return [v[0] for v in pool]
 
 
-def make_margin_ranker(n, center=None):
+def make_margin_ranker(n: int, center: float = None) -> "RankRelevancyWithMarginSampledFeedback":
     return RankRelevancyWithMarginSampledFeedback(
         DummyRankRelevancy(), n, *(() if center is None else [center]),
     )
 
 
-def test_parameter_n():
+def test_parameter_n() -> None:
     """
     Check that the "n" parameter has the expected effect on feedback
     request count
@@ -38,7 +40,7 @@ def test_parameter_n():
         assert len(requests) == min(n, i)
 
 
-def test_pass_through():
+def test_pass_through() -> None:
     """
     Check that scores from the wrapped RankRelevancy are passed
     through
@@ -51,7 +53,7 @@ def test_pass_through():
     assert list(scores) == expected
 
 
-def test_parameter_center():
+def test_parameter_center() -> None:
     """
     Check that the "center" parameter has the expected effect on the
     choice of feedback requests

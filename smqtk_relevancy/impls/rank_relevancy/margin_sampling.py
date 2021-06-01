@@ -1,4 +1,4 @@
-from typing import Hashable, Sequence, Tuple
+from typing import Hashable, Sequence, Tuple, Dict, Any, TypeVar, Type
 
 from numpy import ndarray
 
@@ -9,6 +9,8 @@ from smqtk_core.configuration import (
 )
 from smqtk_core.dict import merge_dict
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy, RankRelevancyWithFeedback
+
+T = TypeVar("T", bound="RankRelevancyWithMarginSampledFeedback")
 
 
 class RankRelevancyWithMarginSampledFeedback(RankRelevancyWithFeedback):
@@ -47,19 +49,19 @@ class RankRelevancyWithMarginSampledFeedback(RankRelevancyWithFeedback):
         return scores, [r[1] for r in ranked[:self._n]]
 
     @classmethod
-    def from_config(cls, config_dict, merge_default=True):
+    def from_config(cls: Type[T], config_dict: Dict[str, Any], merge_default: bool = True) -> T:  # noqa: E501
         config_dict = dict(config_dict, rank_relevancy=from_config_dict(
             config_dict['rank_relevancy'], RankRelevancy.get_impls(),
         ))
         return super().from_config(config_dict, merge_default=merge_default)
 
     @classmethod
-    def get_default_config(cls):
+    def get_default_config(cls) -> Dict[str, Any]:
         c = super().get_default_config()
         rr_default = make_default_config(RankRelevancy.get_impls())
         return dict(c, rank_relevancy=rr_default)
 
-    def get_config(self):
+    def get_config(self) -> Dict[str, Any]:
         return merge_dict(self.get_default_config(), dict(
             rank_relevancy=to_config_dict(self._rank_relevancy),
             n=self._n,

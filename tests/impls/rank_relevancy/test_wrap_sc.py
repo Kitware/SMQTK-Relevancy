@@ -3,18 +3,20 @@ from unittest import mock
 
 import numpy as np
 
-from smqtk_relevancy.impls.wrap_classifier import (
+from smqtk_relevancy.impls.rank_relevancy.wrap_classifier import (
     RankRelevancyWithSupervisedClassifier,
 )
 from smqtk_classifier import SupervisedClassifier
 
+from typing import Dict
 
-def test_is_usable():
+
+def test_is_usable() -> None:
     """ test that this impl is always available. """
     assert RankRelevancyWithSupervisedClassifier.is_usable()
 
 
-def test_rank():
+def test_rank() -> None:
     """
     Test wrapper ``rank`` functionality and return format, checking that:
         - input classifier instance is not utilized further than getting
@@ -25,15 +27,13 @@ def test_rank():
 
     class DummyClassifier (SupervisedClassifier):
         """ Mock supervised classifier to track type usage. """
-        def get_config(self):
+        def get_config(self) -> Dict:
             return {}
 
-        # Set unused abstract methods to None to allow class
-        # instantiation
-        has_model = None
-        get_labels = None
-        _train = None
-        _classify_arrays = None
+        has_model = mock.MagicMock()
+        get_labels = mock.MagicMock()
+        _train = mock.MagicMock()
+        _classify_arrays = mock.MagicMock()
 
         # Also mocking surface methods to bypass super-class functionality
         # for the purposes of this test.
@@ -46,7 +46,7 @@ def test_rank():
     c_inst = DummyClassifier()
     # For tracking that this input instance is not functionally used beyond
     # the ``get_config`` method.
-    c_inst.get_config = mock.MagicMock(
+    c_inst.get_config = mock.MagicMock(  # type: ignore
         side_effect=functools.partial(DummyClassifier.get_config, c_inst)
     )
     c_inst.train = mock.MagicMock()
