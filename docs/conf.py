@@ -5,6 +5,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 import sys
 from pathlib import Path
+from smqtk_core.plugin import metadata
 
 # -- Path setup --------------------------------------------------------------
 
@@ -15,17 +16,14 @@ from pathlib import Path
 root_path = Path(__file__).absolute().parent.parent
 sys.path.insert(0, str(root_path))
 
-# Helper imports from repo root
-from setup import VERSION
-
 # -- Project information -----------------------------------------------------
 
-project = 'SMQTK'
+project = 'SMQTK-Relevancy'
 copyright = '2015, Kitware, Inc.'
 author = 'Kitware, Inc.'
 
 # The full version, including alpha/beta/rc tags
-release = VERSION
+release = metadata.version("smqtk_relevancy")
 
 
 # -- General configuration ---------------------------------------------------

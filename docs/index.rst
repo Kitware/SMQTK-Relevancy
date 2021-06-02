@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Social Media Query ToolKit
-==========================
+Social Media Query ToolKit -- Relevancy
+=======================================
 
-`GitHub <https://github.com/Kitware/SMQTK>`_
+`GitHub <https://github.com/Kitware/SMQTK-Relevancy>`_
 
 Python toolkit for pluggable algorithms and data structures for multimedia-based machine learning.
 
@@ -14,9 +14,8 @@ Python toolkit for pluggable algorithms and data structures for multimedia-based
    :maxdepth: 2
 
    installation
-   quickstarts
-   architecture
-   examples/overview
+   relevancyinterfaces
+   relevancyimplementations
    releasing
 
 Indices and tables
