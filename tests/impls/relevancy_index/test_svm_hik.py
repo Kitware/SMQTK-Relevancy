@@ -6,8 +6,10 @@ import pytest
 
 from smqtk_descriptors.impls.descriptor_element.memory import \
     DescriptorMemoryElement
-from smqtk_relevancy.impls.libsvm_hik import LibSvmHikRelevancyIndex
+from smqtk_relevancy.impls.relevancy_index.libsvm_hik import LibSvmHikRelevancyIndex
 from smqtk_core.configuration import configuration_test_helper
+
+from typing import List
 
 
 @pytest.mark.skipif(not LibSvmHikRelevancyIndex.is_usable(),
@@ -15,8 +17,19 @@ from smqtk_core.configuration import configuration_test_helper
                            "usable.")
 class TestIqrSvmHik (unittest.TestCase):
 
+    d0: DescriptorMemoryElement
+    d1: DescriptorMemoryElement
+    d2: DescriptorMemoryElement
+    d3: DescriptorMemoryElement
+    d4: DescriptorMemoryElement
+    d5: DescriptorMemoryElement
+    d6: DescriptorMemoryElement
+    index_descriptors: List[DescriptorMemoryElement]
+    q_pos: DescriptorMemoryElement
+    q_neg: DescriptorMemoryElement
+
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         # Don't need to clear cache because we're setting the vectors here
         cls.d0 = DescriptorMemoryElement('index', 0)
         cls.d0.set_vector(np.array([1, 0, 0, 0, 0], float))
@@ -40,7 +53,7 @@ class TestIqrSvmHik (unittest.TestCase):
         cls.q_neg = DescriptorMemoryElement('query', 1)
         cls.q_neg.set_vector(np.array([0,   0,   0, .5, .5], float))
 
-    def test_configuration(self):
+    def test_configuration(self) -> None:
         inst = LibSvmHikRelevancyIndex(
             descr_cache_filepath='foobar.thing',
             autoneg_select_ratio=89,
@@ -53,30 +66,30 @@ class TestIqrSvmHik (unittest.TestCase):
             assert i.multiprocess_fetch is True
             assert i.cores == 1
 
-    def test_rank_no_neg(self):
+    def test_rank_no_neg(self) -> None:
         iqr_index = LibSvmHikRelevancyIndex()
         iqr_index.build_index(self.index_descriptors)
         # index should auto-select some negative examples, thus not raising
         # an exception.
         iqr_index.rank([self.q_pos], [])
 
-    def test_rank_no_pos(self):
+    def test_rank_no_pos(self) -> None:
         iqr_index = LibSvmHikRelevancyIndex()
         iqr_index.build_index(self.index_descriptors)
         self.assertRaises(ValueError, iqr_index.rank, [], [self.q_neg])
 
-    def test_rank_no_input(self):
+    def test_rank_no_input(self) -> None:
         iqr_index = LibSvmHikRelevancyIndex()
         iqr_index.build_index(self.index_descriptors)
         self.assertRaises(ValueError, iqr_index.rank, [], [])
 
-    def test_count(self):
+    def test_count(self) -> None:
         iqr_index = LibSvmHikRelevancyIndex()
         self.assertEqual(iqr_index.count(), 0)
         iqr_index.build_index(self.index_descriptors)
         self.assertEqual(iqr_index.count(), 7)
 
-    def test_simple_iqr_scenario(self):
+    def test_simple_iqr_scenario(self) -> None:
         # Make some descriptors;
         # Pick some from created set that are close to each other and use as
         #   positive query, picking some other random descriptors as

@@ -4,9 +4,9 @@ import unittest
 import unittest.mock as mock
 import numpy as np
 import pytest
+from typing import Dict, Any
 
-from smqtk_relevancy.impls.classifier_wrapper import \
-    SupervisedClassifierRelevancyIndex, NoIndexError
+from smqtk_relevancy.impls.relevancy_index.classifier_wrapper import SupervisedClassifierRelevancyIndex, NoIndexError
 from smqtk_classifier import SupervisedClassifier
 from smqtk_descriptors import DescriptorElement
 from smqtk_descriptors.impls.descriptor_element.memory import \
@@ -18,11 +18,11 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
     Unit tests for the SupervisedClassifierRelevancyIndex implementation.
     """
 
-    def test_is_usable(self):
+    def test_is_usable(self) -> None:
         """ test that this impl is always available. """
         assert SupervisedClassifierRelevancyIndex.is_usable() is True
 
-    def test_rank_before_build(self):
+    def test_rank_before_build(self) -> None:
         """ Test that the appropriate exception occurs if attempting to rank
         before building the index."""
         m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
@@ -35,13 +35,13 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
         with pytest.raises(NoIndexError):
             ri.rank(pos=m_pos_elems, neg=m_neg_elems)
 
-    def test_empty_count(self):
+    def test_empty_count(self) -> None:
         """ Test that count is 0 before a build. """
         m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
         ri = SupervisedClassifierRelevancyIndex(m_classifier_inst)
         assert ri.count() == 0
 
-    def test_build_index(self):
+    def test_build_index(self) -> None:
         """ Test "building" a generic index, i.e. descriptor corpus. """
         m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
         ri = SupervisedClassifierRelevancyIndex(m_classifier_inst)
@@ -54,7 +54,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
         assert ri._descr_elem_list == build_elems
         assert np.allclose(ri._descr_matrix, [[i] for i in range(10)])
 
-    def test_build_index_no_elements(self):
+    def test_build_index_no_elements(self) -> None:
         """ Test that the expected error occurs when attempting a build with no
         elements."""
         m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
@@ -62,7 +62,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
         with pytest.raises(ValueError, match="No descriptor elements passed"):
             ri.build_index(iter([]))
 
-    def test_rank(self):
+    def test_rank(self) -> None:
         """
         Test wrapper ``rank`` functionality and return format, checking that:
             - input classifier instance is not utilized further than getting
@@ -75,10 +75,10 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
         class DummyClassifier (SupervisedClassifier):
             """ Mock supervised classifier to track type usage. """
             @classmethod
-            def is_usable(cls):
+            def is_usable(cls) -> bool:
                 return True
 
-            def get_config(self):
+            def get_config(self) -> Dict[str, Any]:
                 return {}
 
             has_model = mock.MagicMock()
@@ -87,7 +87,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
 
             # Include dummy return for the label that should have been trained
             # with
-            _classify_arrays = None
+            _classify_arrays = None  # type: ignore
 
             # Also mocking surface methods to bypass super-class functionality
             # for the purposes of this test.
@@ -100,7 +100,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
         c_inst = DummyClassifier()
         # For tracking that this input instance is not functionally used beyond
         # the ``get_config`` method.
-        c_inst.get_config = mock.MagicMock(
+        c_inst.get_config = mock.MagicMock(  # type: ignore
             side_effect=functools.partial(DummyClassifier.get_config, c_inst)
         )
         c_inst.train = mock.MagicMock()
@@ -111,12 +111,12 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
         # Mock building index
         # - Not just using mock objects to test output format.
         m_mat = list(range(10))
-        ri._descr_matrix = m_mat
+        ri._descr_matrix = m_mat  # type: ignore
         # Replacing elements with strings for simplicity. Instance should not
         # be doing anything with elements anyway besides satisfying formatting
         # (ugh).
         m_elems = [str(v) for v in m_mat]
-        ri._descr_elem_list = m_elems
+        ri._descr_elem_list = m_elems  # type: ignore
 
         # Invoke ``rank`` with mock input
         m_pos = mock.MagicMock()

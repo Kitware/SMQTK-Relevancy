@@ -9,7 +9,9 @@ Kitware, Inc., 28 Corporate Drive, Clifton Park, NY 12065.
 import numpy as np
 
 
-def compute_distance_matrix(m1, m2, dist_func, row_wise=False):
+def compute_distance_matrix(m1: np.ndarray, m2: np.ndarray,
+                            dist_func: np.ndarray, row_wise: bool = False) \
+                            -> np.ndarray:
     """
     Function for computing the pair-wise distance matrix between two arrays of
     vectors. Both matrices must have the same number of columns.

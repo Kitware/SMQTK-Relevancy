@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Dict, Any, TypeVar, Type
 
 import numpy as np
 
@@ -12,6 +12,8 @@ from smqtk_core.configuration import (
 )
 
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
+
+T = TypeVar("T", bound="RankRelevancyWithSupervisedClassifier")
 
 
 class RankRelevancyWithSupervisedClassifier(RankRelevancy):
@@ -37,20 +39,21 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
         clone at rank time. The input classifier instance is not modified.
     """
 
-    def __init__(self, classifier_inst):
+    def __init__(self, classifier_inst: SupervisedClassifier):
         super().__init__()
         self._classifier_type = type(classifier_inst)
         self._classifier_config = classifier_inst.get_config()
 
     @classmethod
-    def get_default_config(cls):
+    def get_default_config(cls) -> Dict[str, Any]:
         c = super().get_default_config()
         c['classifier_inst'] = \
             make_default_config(SupervisedClassifier.get_impls())
         return c
 
     @classmethod
-    def from_config(cls, config_dict, merge_default=True):
+    def from_config(cls: Type[T], config_dict: Dict[str, Any], merge_default:
+                    bool = True) -> T:
         config_dict = dict(config_dict)  # shallow copy to write to input dict
         config_dict['classifier_inst'] = \
             from_config_dict(config_dict.get('classifier_inst', {}),
@@ -59,7 +62,7 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
             config_dict, merge_default=merge_default,
         )
 
-    def get_config(self):
+    def get_config(self) -> Dict[str, Any]:
         return {
             'classifier_inst':
                 cls_conf_to_config_dict(self._classifier_type,
