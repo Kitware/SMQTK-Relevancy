@@ -1,0 +1,17 @@
+v0.15.0
+=======
+
+This is the initial release of ``smqtk-relevancy``, spinning off from
+v0.14.0 of the monolithic `SMQTK`_ library.
+
+.. _smqtk: https://github.com/kitware/smqtk
+
+Updates / New Features
+----------------------
+
+Misc.
+
+* Fix documentation and adding RTD.
+
+Fixes
+-----
