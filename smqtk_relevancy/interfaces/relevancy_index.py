@@ -1,8 +1,13 @@
 import abc
 from typing import Iterable, Dict
+from warnings import warn
 
 from smqtk_core import Plugfigurable
 from smqtk_descriptors import DescriptorElement
+
+
+warn("Relevancy Index is deprecated and may be removed in a future release."
+     "Please use Rank Relevancy instead.")
 
 
 class NoIndexError (Exception):
