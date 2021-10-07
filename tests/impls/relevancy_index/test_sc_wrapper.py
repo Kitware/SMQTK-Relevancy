@@ -7,7 +7,7 @@ import pytest
 from typing import Dict, Any
 
 from smqtk_relevancy.impls.relevancy_index.classifier_wrapper import SupervisedClassifierRelevancyIndex, NoIndexError
-from smqtk_classifier import SupervisedClassifier
+from smqtk_classifier import ClassifyDescriptorSupervised
 from smqtk_descriptors import DescriptorElement
 from smqtk_descriptors.impls.descriptor_element.memory import \
     DescriptorMemoryElement
@@ -25,7 +25,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
     def test_rank_before_build(self) -> None:
         """ Test that the appropriate exception occurs if attempting to rank
         before building the index."""
-        m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
+        m_classifier_inst = mock.MagicMock(spec=ClassifyDescriptorSupervised)
 
         m_pos_elems = [mock.MagicMock(spec=DescriptorElement)]
         m_neg_elems = [mock.MagicMock(spec=DescriptorElement)]
@@ -37,16 +37,16 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
 
     def test_empty_count(self) -> None:
         """ Test that count is 0 before a build. """
-        m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
+        m_classifier_inst = mock.MagicMock(spec=ClassifyDescriptorSupervised)
         ri = SupervisedClassifierRelevancyIndex(m_classifier_inst)
         assert ri.count() == 0
 
     def test_build_index(self) -> None:
         """ Test "building" a generic index, i.e. descriptor corpus. """
-        m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
+        m_classifier_inst = mock.MagicMock(spec=ClassifyDescriptorSupervised)
         ri = SupervisedClassifierRelevancyIndex(m_classifier_inst)
 
-        build_elems = [DescriptorMemoryElement('t', i).set_vector([i])
+        build_elems = [DescriptorMemoryElement(i).set_vector([i])
                        for i in range(10)]
         ri.build_index(build_elems)
 
@@ -57,7 +57,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
     def test_build_index_no_elements(self) -> None:
         """ Test that the expected error occurs when attempting a build with no
         elements."""
-        m_classifier_inst = mock.MagicMock(spec=SupervisedClassifier)
+        m_classifier_inst = mock.MagicMock(spec=ClassifyDescriptorSupervised)
         ri = SupervisedClassifierRelevancyIndex(m_classifier_inst)
         with pytest.raises(ValueError, match="No descriptor elements passed"):
             ri.build_index(iter([]))
@@ -72,7 +72,7 @@ class TestSupervisedClassifierRelevancyIndex (unittest.TestCase):
             - returned dictionary format is appropriate
         """
 
-        class DummyClassifier (SupervisedClassifier):
+        class DummyClassifier (ClassifyDescriptorSupervised):
             """ Mock supervised classifier to track type usage. """
             @classmethod
             def is_usable(cls) -> bool:

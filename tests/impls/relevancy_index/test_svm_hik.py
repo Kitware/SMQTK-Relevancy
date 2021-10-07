@@ -31,26 +31,26 @@ class TestIqrSvmHik (unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # Don't need to clear cache because we're setting the vectors here
-        cls.d0 = DescriptorMemoryElement('index', 0)
+        cls.d0 = DescriptorMemoryElement(0)
         cls.d0.set_vector(np.array([1, 0, 0, 0, 0], float))
-        cls.d1 = DescriptorMemoryElement('index', 1)
+        cls.d1 = DescriptorMemoryElement(1)
         cls.d1.set_vector(np.array([0, 1, 0, 0, 0], float))
-        cls.d2 = DescriptorMemoryElement('index', 2)
+        cls.d2 = DescriptorMemoryElement(2)
         cls.d2.set_vector(np.array([0, 0, 1, 0, 0], float))
-        cls.d3 = DescriptorMemoryElement('index', 3)
+        cls.d3 = DescriptorMemoryElement(3)
         cls.d3.set_vector(np.array([0, 0, 0, 1, 0], float))
-        cls.d4 = DescriptorMemoryElement('index', 4)
+        cls.d4 = DescriptorMemoryElement(4)
         cls.d4.set_vector(np.array([0, 0, 0, 0, 1], float))
-        cls.d5 = DescriptorMemoryElement('index', 5)
+        cls.d5 = DescriptorMemoryElement(5)
         cls.d5.set_vector(np.array([0.5, 0, 0.5, 0, 0], float))
-        cls.d6 = DescriptorMemoryElement('index', 6)
+        cls.d6 = DescriptorMemoryElement(6)
         cls.d6.set_vector(np.array([.2, .2, .2, .2, .2], float))
         cls.index_descriptors = [cls.d0, cls.d1, cls.d2, cls.d3, cls.d4,
                                  cls.d5, cls.d6]
 
-        cls.q_pos = DescriptorMemoryElement('query', 0)
+        cls.q_pos = DescriptorMemoryElement(7)
         cls.q_pos.set_vector(np.array([.75, .25, 0, 0, 0], float))
-        cls.q_neg = DescriptorMemoryElement('query', 1)
+        cls.q_neg = DescriptorMemoryElement(8)
         cls.q_neg.set_vector(np.array([0,   0,   0, .5, .5], float))
 
     def test_configuration(self) -> None:
