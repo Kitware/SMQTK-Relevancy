@@ -6,7 +6,7 @@ import numpy as np
 from smqtk_relevancy.impls.rank_relevancy.wrap_classifier import (
     RankRelevancyWithSupervisedClassifier,
 )
-from smqtk_classifier import SupervisedClassifier
+from smqtk_classifier import ClassifyDescriptorSupervised
 
 from typing import Dict
 
@@ -25,7 +25,7 @@ def test_rank() -> None:
         - returned sequence format is appropriate
     """
 
-    class DummyClassifier (SupervisedClassifier):
+    class DummyClassifier (ClassifyDescriptorSupervised):
         """ Mock supervised classifier to track type usage. """
         def get_config(self) -> Dict:
             return {}

@@ -2,7 +2,7 @@ import numpy as np
 from six.moves import zip
 from typing import Dict, Iterable, Any, TypeVar, Type, List, Optional, Tuple, Hashable
 
-from smqtk_classifier import SupervisedClassifier
+from smqtk_classifier import ClassifyDescriptorSupervised
 from smqtk_descriptors import DescriptorElement
 from smqtk_core.configuration import (
     from_config_dict,
@@ -33,13 +33,13 @@ class SupervisedClassifierRelevancyIndex (RelevancyIndex):
     Using a copy of the input classifier allows the ``rank`` method to be used
     in parallel without blocking other calls to ``rank``.
 
-    :param smqtk.algorithms.SupervisedClassifier classifier_inst:
+    :param classifier_inst:
         Supervised classifier instance to base the ephemeral ranking classifier
         on. The type and configuration of this classifier is used to create a
         clone at rank time. The input classifier instance is not modified.
     """
 
-    def __init__(self, classifier_inst: SupervisedClassifier):
+    def __init__(self, classifier_inst: ClassifyDescriptorSupervised):
         super(SupervisedClassifierRelevancyIndex, self).__init__()
         self._classifier_type = type(classifier_inst)
         self._classifier_config = classifier_inst.get_config()
@@ -59,7 +59,7 @@ class SupervisedClassifierRelevancyIndex (RelevancyIndex):
     def get_default_config(cls) -> Dict[str, Any]:
         c = super(SupervisedClassifierRelevancyIndex, cls).get_default_config()
         c['classifier_inst'] = \
-            make_default_config(SupervisedClassifier.get_impls())
+            make_default_config(ClassifyDescriptorSupervised.get_impls())
         return c
 
     @classmethod
@@ -68,7 +68,7 @@ class SupervisedClassifierRelevancyIndex (RelevancyIndex):
         config_dict = dict(config_dict)  # shallow copy to write to input dict
         config_dict['classifier_inst'] = \
             from_config_dict(config_dict.get('classifier_inst', {}),
-                             SupervisedClassifier.get_impls())
+                             ClassifyDescriptorSupervised.get_impls())
         return super(SupervisedClassifierRelevancyIndex, cls).from_config(
             config_dict, merge_default=merge_default
         )

@@ -2,7 +2,7 @@ from typing import Sequence, Dict, Any, TypeVar, Type
 
 import numpy as np
 
-from smqtk_classifier import SupervisedClassifier
+from smqtk_classifier import ClassifyDescriptorSupervised
 from smqtk_descriptors import DescriptorElement
 from smqtk_descriptors.impls.descriptor_element.memory import DescriptorMemoryElement
 from smqtk_core.configuration import (
@@ -13,6 +13,7 @@ from smqtk_core.configuration import (
 
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
 
+
 T = TypeVar("T", bound="RankRelevancyWithSupervisedClassifier")
 
 
@@ -20,6 +21,10 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
     """
     Relevancy ranking that utilizes a usable supervised classifier for
     on-the-fly training and inference.
+
+    While the name of this class merely states "supervised classifier," we
+    specifically utilize the interface for descriptor classification as opposed
+    to the interfaces for other modalities (like images).
 
     # Classifier "cloning"
     The input supervised classifier instance to the constructor is not directly
@@ -33,13 +38,13 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
     Using a copy of the input classifier allows the ``rank`` method to be used
     in parallel without blocking other calls to ``rank``.
 
-    :param smqtk.algorithms.SupervisedClassifier classifier_inst:
+    :param classifier_inst:
         Supervised classifier instance to base the ephemeral ranking classifier
         on. The type and configuration of this classifier is used to create a
         clone at rank time. The input classifier instance is not modified.
     """
 
-    def __init__(self, classifier_inst: SupervisedClassifier):
+    def __init__(self, classifier_inst: ClassifyDescriptorSupervised):
         super().__init__()
         self._classifier_type = type(classifier_inst)
         self._classifier_config = classifier_inst.get_config()
@@ -48,7 +53,7 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
     def get_default_config(cls) -> Dict[str, Any]:
         c = super().get_default_config()
         c['classifier_inst'] = \
-            make_default_config(SupervisedClassifier.get_impls())
+            make_default_config(ClassifyDescriptorSupervised.get_impls())
         return c
 
     @classmethod
@@ -57,8 +62,8 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
         config_dict = dict(config_dict)  # shallow copy to write to input dict
         config_dict['classifier_inst'] = \
             from_config_dict(config_dict.get('classifier_inst', {}),
-                             SupervisedClassifier.get_impls())
-        return super().from_config(
+                             ClassifyDescriptorSupervised.get_impls())
+        return super(RankRelevancyWithSupervisedClassifier, cls).from_config(
             config_dict, merge_default=merge_default,
         )
 
@@ -87,7 +92,7 @@ class RankRelevancyWithSupervisedClassifier(RankRelevancy):
         def create_de(v: np.ndarray) -> DescriptorElement:
             nonlocal i
             # Hopefully type_str doesn't matter
-            de = DescriptorMemoryElement('', i)
+            de = DescriptorMemoryElement(i)
             de.set_vector(v)
             i += 1
             return de
