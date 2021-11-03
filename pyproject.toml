@@ -40,6 +40,14 @@ pytest-cov = "^2.11.1"
 ipython = "^7.16"
 jedi = "^0.17"
 
+[tool.poetry.plugins."smqtk_plugins"]
+# RankRelevancy
+"smqtk_relevancy.impls.rank_relevancy.margin_sampling" = "smqtk_relevancy.impls.rank_relevancy.margin_sampling"
+"smqtk_relevancy.impls.rank_relevancy.wrap_classifier" = "smqtk_relevancy.impls.rank_relevancy.wrap_classifier"
+# Relevancy Index
+"smqtk_relevancy.impls.relevancy_index.classifier_wrapper" = "smqtk_relevancy.impls.relevancy_index.classifier_wrapper"
+"smqtk_relevancy.impls.relevancy_index.libsvm_hik" = "smqtk_relevancy.impls.relevancy_index.libsvm_hik"
+
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [
