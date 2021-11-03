@@ -44,7 +44,7 @@ jedi = "^0.17"
 # RankRelevancy
 "smqtk_relevancy.impls.rank_relevancy.margin_sampling" = "smqtk_relevancy.impls.rank_relevancy.margin_sampling"
 "smqtk_relevancy.impls.rank_relevancy.wrap_classifier" = "smqtk_relevancy.impls.rank_relevancy.wrap_classifier"
-# Relevancy Index
+# RelevancyIndex
 "smqtk_relevancy.impls.relevancy_index.classifier_wrapper" = "smqtk_relevancy.impls.relevancy_index.classifier_wrapper"
 "smqtk_relevancy.impls.relevancy_index.libsvm_hik" = "smqtk_relevancy.impls.relevancy_index.libsvm_hik"
 
