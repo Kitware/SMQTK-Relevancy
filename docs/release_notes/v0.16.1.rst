@@ -1,0 +1,9 @@
+v0.16.1
+=======
+
+Updates / New Features
+----------------------
+
+Fixes
+-----
+ * Add plugin exports section to pyproject.toml
