@@ -2,14 +2,14 @@ import numpy
 from typing import Dict, List, Sequence, Iterable
 
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
-from smqtk_relevancy.impls.rank_relevancy.margin_sampling import (
-    RankRelevancyWithMarginSampledFeedback,
+from smqtk_relevancy.impls.rank_relevancy.sorted_sampling import (
+    RankRelevancyWithSortedFeedback,
 )
 from smqtk_descriptors import DescriptorElement
 
 
 def test_is_usable() -> None:
-    assert RankRelevancyWithMarginSampledFeedback.is_usable()
+    assert RankRelevancyWithSortedFeedback.is_usable()
 
 
 class DummyRankRelevancy(RankRelevancy):
@@ -19,9 +19,9 @@ class DummyRankRelevancy(RankRelevancy):
         return [v[0] for v in pool]
 
 
-def make_margin_ranker(n: int, center: float = None) -> RankRelevancyWithMarginSampledFeedback:
-    return RankRelevancyWithMarginSampledFeedback(
-        DummyRankRelevancy(), n, *(() if center is None else [center]),
+def make_sorted_ranker(n: int) -> RankRelevancyWithSortedFeedback:
+    return RankRelevancyWithSortedFeedback(
+        DummyRankRelevancy(), n
     )
 
 
@@ -31,7 +31,7 @@ def test_parameter_n() -> None:
     request count
     """
     n = 10
-    mr = make_margin_ranker(n)
+    mr = make_sorted_ranker(n)
     for i in range(3, 31, 3):
         pool = numpy.linspace(0, 1, i)[:, numpy.newaxis]
         pool_uids = [object() for _ in range(i)]
@@ -44,7 +44,7 @@ def test_pass_through() -> None:
     Check that scores from the wrapped RankRelevancy are passed
     through regardless of the `n` value.
     """
-    mr = make_margin_ranker(3)
+    mr = make_sorted_ranker(3)
     pool = [[.3], [.1], [.45], [.29], [.03]]
     expected = [.3, .1, .45, .29, .03]
     uids = [object() for _ in pool]
@@ -52,16 +52,15 @@ def test_pass_through() -> None:
     assert list(scores) == expected
 
 
-def test_parameter_center() -> None:
+def test_descending_feedback() -> None:
     """
-    Check that the "center" parameter has the expected effect on the
-    choice of feedback requests
+    Check that feedback results are returned in correct descending
+    order based on scores from the wrapped RankRelevancy.
     """
-    pool = [[i ** 2 / 100] for i in range(11)]
-    uids = 'abcdefghijk'
-    centers = [.045, .2]
-    expected = ['cb', 'ef']  # [(.04, .01), (.16, .25)]
-    for c, e in zip(centers, expected):
-        mr = make_margin_ranker(2, c)
-        scores, requests = mr.rank_with_feedback([], [], pool, uids)
-        assert list(requests) == list(e)
+    mr = make_sorted_ranker(3)
+    pool = [[.3], [.1], [.45], [.29], [.03]]
+    uids = [object() for _ in pool]
+    ranks = numpy.argsort(pool, axis=0)[::-1].ravel()
+    expected = [uids[i] for i in ranks[:mr._n]]
+    scores, requests = mr.rank_with_feedback([], [], pool, uids)
+    assert list(requests) == expected

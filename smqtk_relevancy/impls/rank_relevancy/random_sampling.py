@@ -1,5 +1,6 @@
 from typing import Hashable, Sequence, Tuple, Dict, Any, TypeVar, Type
 
+import random
 from numpy import ndarray
 
 from smqtk_core.configuration import (
@@ -10,31 +11,31 @@ from smqtk_core.configuration import (
 from smqtk_core.dict import merge_dict
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy, RankRelevancyWithFeedback
 
-T = TypeVar("T", bound="RankRelevancyWithMarginSampledFeedback")
+T = TypeVar("T", bound="RankRelevancyWithRandomFeedback")
 
 
-class RankRelevancyWithMarginSampledFeedback(RankRelevancyWithFeedback):
+class RankRelevancyWithRandomFeedback(RankRelevancyWithFeedback):
     """
-    Wrap an instance of :class:`RankRelevancy` to provide feedback via
-    margin sampling
+    Wrap an instance of :class:`RankRelevancy` to provide random feedback
 
     :param rank_relevancy: :class:`RankRelevancy` to use for computing
         relevancy scores
     :param n: Maximum number of items to return for feedback
-    :param center: Value for which pool items whose relevancy score is
-        closest to it will be returned for feedback (default: 0.5)
+    :param seed: Seed value for random number generation to ensure reproducibility
+        of feedback results (default: 0)
 
     :raises ValueError: n is negative
 
     """
 
     def __init__(self, rank_relevancy: RankRelevancy,
-                 n: int, center: float = 0.5):
+                 n: int, seed: int = 0):
         self._rank_relevancy = rank_relevancy
         if n < 0:
             raise ValueError(f"n must be nonnegative but got {n}")
         self._n = n
-        self._center = center
+        self._seed = seed
+        random.seed(seed)
 
     def _rank_with_feedback(
             self,
@@ -44,8 +45,7 @@ class RankRelevancyWithMarginSampledFeedback(RankRelevancyWithFeedback):
             pool_uids: Sequence[Hashable],
     ) -> Tuple[Sequence[float], Sequence[Hashable]]:
         scores = self._rank_relevancy.rank(pos, neg, pool)
-        c = self._center
-        ranked = sorted(zip(scores, pool_uids), key=lambda su: abs(su[0] - c))
+        ranked = random.sample(list(zip(scores, pool_uids)), len(scores))
         return scores, [r[1] for r in ranked[:self._n]]
 
     @classmethod
@@ -65,5 +65,5 @@ class RankRelevancyWithMarginSampledFeedback(RankRelevancyWithFeedback):
         return merge_dict(self.get_default_config(), dict(
             rank_relevancy=to_config_dict(self._rank_relevancy),
             n=self._n,
-            center=self._center,
+            seed=self._seed,
         ))
