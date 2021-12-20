@@ -2,14 +2,14 @@ import numpy
 from typing import Dict, List, Sequence, Iterable
 
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
-from smqtk_relevancy.impls.rank_relevancy.margin_sampling import (
-    RankRelevancyWithMarginSampledFeedback,
+from smqtk_relevancy.impls.rank_relevancy.random_sampling import (
+    RankRelevancyWithRandomFeedback,
 )
 from smqtk_descriptors import DescriptorElement
 
 
 def test_is_usable() -> None:
-    assert RankRelevancyWithMarginSampledFeedback.is_usable()
+    assert RankRelevancyWithRandomFeedback.is_usable()
 
 
 class DummyRankRelevancy(RankRelevancy):
@@ -19,9 +19,9 @@ class DummyRankRelevancy(RankRelevancy):
         return [v[0] for v in pool]
 
 
-def make_margin_ranker(n: int, center: float = None) -> RankRelevancyWithMarginSampledFeedback:
-    return RankRelevancyWithMarginSampledFeedback(
-        DummyRankRelevancy(), n, *(() if center is None else [center]),
+def make_random_ranker(n: int, seed: int = 0) -> RankRelevancyWithRandomFeedback:
+    return RankRelevancyWithRandomFeedback(
+        DummyRankRelevancy(), n, seed
     )
 
 
@@ -31,7 +31,7 @@ def test_parameter_n() -> None:
     request count
     """
     n = 10
-    mr = make_margin_ranker(n)
+    mr = make_random_ranker(n)
     for i in range(3, 31, 3):
         pool = numpy.linspace(0, 1, i)[:, numpy.newaxis]
         pool_uids = [object() for _ in range(i)]
@@ -44,7 +44,7 @@ def test_pass_through() -> None:
     Check that scores from the wrapped RankRelevancy are passed
     through regardless of the `n` value.
     """
-    mr = make_margin_ranker(3)
+    mr = make_random_ranker(3)
     pool = [[.3], [.1], [.45], [.29], [.03]]
     expected = [.3, .1, .45, .29, .03]
     uids = [object() for _ in pool]
@@ -52,16 +52,16 @@ def test_pass_through() -> None:
     assert list(scores) == expected
 
 
-def test_parameter_center() -> None:
+def test_parameter_seed() -> None:
     """
-    Check that the "center" parameter has the expected effect on the
+    Check that the "seed" parameter has the expected effect on the
     choice of feedback requests
     """
     pool = [[i ** 2 / 100] for i in range(11)]
     uids = 'abcdefghijk'
-    centers = [.045, .2]
-    expected = ['cb', 'ef']  # [(.04, .01), (.16, .25)]
-    for c, e in zip(centers, expected):
-        mr = make_margin_ranker(2, c)
+    seed = [1, 2]
+    expected = ['cj', 'ab']  # [(.04, .01), (.16, .25)]
+    for s, e in zip(seed, expected):
+        mr = make_random_ranker(2, s)
         scores, requests = mr.rank_with_feedback([], [], pool, uids)
         assert list(requests) == list(e)
