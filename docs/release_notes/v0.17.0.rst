@@ -1,5 +1,7 @@
 v0.17.0
 =======
+This minor release adds new implementations to the `RankRelevancyWithFeedback`
+interface: random and score-sorted feedback.
 
 Updates / New Features
 ----------------------
