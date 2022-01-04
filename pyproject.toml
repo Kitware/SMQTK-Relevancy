@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 ###############################################################################
 [tool.poetry]
 name = "smqtk_relevancy"
-version = "0.16.1"
+version = "0.17.0"
 description = "SMQTK Relevancy"
 authors = ["Kitware, Inc. <smqtk-developers@kitware.com>"]
 license = "BSD-3-Clause"
