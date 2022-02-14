@@ -13,13 +13,13 @@ Fixes
 
 CI
 
-* Also run CI unittests for PRs targetting branches that match the `release*`
-  glob.
+* Modified CI unittests workflow to run for PRs targetting branches that match
+  the `release*` glob.
 
 Dependency Versions
 
-* Update the developer dependency and locked version of ipython to address a
+* Updated the developer dependency and locked version of ipython to address a
   security vulnerability.
 
-* Removed `jedi = "^0.17"` requirement and update to `ipython = "^7.17.3"`
+* Removed `jedi = "^0.17"` requirement and updated to `ipython = "^7.17.3"`
   since recent ipython update appropriately addresses the dependency.
