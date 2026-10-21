@@ -1,5 +1,5 @@
 import numpy
-from typing import Dict, List, Sequence, Iterable
+from typing import Dict, List, Sequence, Iterable, Optional
 
 from smqtk_relevancy.interfaces.rank_relevancy import RankRelevancy
 from smqtk_relevancy.impls.rank_relevancy.margin_sampling import (
@@ -19,7 +19,7 @@ class DummyRankRelevancy(RankRelevancy):
         return [v[0] for v in pool]
 
 
-def make_margin_ranker(n: int, center: float = None) -> RankRelevancyWithMarginSampledFeedback:
+def make_margin_ranker(n: int, center: Optional[float] = None) -> RankRelevancyWithMarginSampledFeedback:
     return RankRelevancyWithMarginSampledFeedback(
         DummyRankRelevancy(), n, *(() if center is None else [center]),
     )
