@@ -58,6 +58,7 @@ tornado = [
 ]
 # Testing
 coverage = ">=7.10.6"
+diff-cover = {version = ">=11.0.1", python = ">=3.11"}
 mock = ">=4.0.3"
 pytest = ">=9.0.3"
 pytest-cov = ">=2.11.1"
@@ -93,3 +94,7 @@ doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "IGNORE_EXCEPTION_DETAIL",
 ]
+
+[tool.coverage.run]
+source = ["smqtk_relevancy", "tests"]
+relative_files = true

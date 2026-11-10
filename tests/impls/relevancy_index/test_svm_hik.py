@@ -1,5 +1,6 @@
 from __future__ import division, print_function
 import unittest
+from unittest import mock
 
 import numpy as np
 import pytest
@@ -9,7 +10,24 @@ from smqtk_descriptors.impls.descriptor_element.memory import \
 from smqtk_relevancy.impls.relevancy_index.libsvm_hik import LibSvmHikRelevancyIndex
 from smqtk_core.configuration import configuration_test_helper
 
-from typing import List
+from typing import List, Optional
+
+
+@pytest.mark.parametrize("negative_vector, message", [
+    (None, "Negative descriptor has no vector."),
+    ([0., 1.], "No positive examples provided."),
+])
+def test_rank_invalid_training_examples(
+    negative_vector: Optional[List[float]], message: str
+) -> None:
+    # Invalid examples must be rejected before invoking the optional LIBSVM.
+    negative = DescriptorMemoryElement(0)
+    if negative_vector is not None:
+        negative.set_vector(negative_vector)
+    with mock.patch.object(LibSvmHikRelevancyIndex, "is_usable", return_value=True):
+        index = LibSvmHikRelevancyIndex()
+    with pytest.raises(ValueError, match=message):
+        index.rank([], [negative])
 
 
 @pytest.mark.skipif(not LibSvmHikRelevancyIndex.is_usable(),

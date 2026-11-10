@@ -18,8 +18,9 @@ Updates / New Features
 
 CI
 
-* Updated CI unittests workflow to include codecov reporting.
-  Reduced CodeCov report submission by skipping this step on scheduled runs.
+* Replaced Codecov uploads with coverage checks and reports in GitHub Actions.
+  Combined coverage across Python versions and retained the existing package,
+  test, and changed-line coverage thresholds. Reports are retained for seven days.
 
 Documentation
 
