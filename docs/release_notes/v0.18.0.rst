@@ -1,6 +1,12 @@
 v0.18.0
 =======
 
+This release adds official Python 3.14 support and testing, with explicit NumPy
+compatibility minimums and NumPy 2 support on older supported Python versions.
+It also updates dependencies for compatibility and security, improves CI
+reliability, and replaces Codecov with coverage checks and reports in GitHub
+Actions.
+
 Updates / New Features
 ----------------------
 
