@@ -5,39 +5,65 @@ build-backend = "poetry.core.masonry.api"
 ###############################################################################
 [tool.poetry]
 name = "smqtk_relevancy"
-version = "0.17.0"
+version = "0.18.0"
 description = "SMQTK Relevancy"
 authors = ["Kitware, Inc. <smqtk-developers@kitware.com>"]
 license = "BSD-3-Clause"
 
+classifiers = [
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
+]
+
 [tool.poetry.dependencies]
-python = "^3.6"
-numpy = "^1.19.5"
-smqtk-core = ">=0.18.0"
-smqtk-dataprovider = ">=0.16.0"
-smqtk-classifier = ">=0.19.0"
-smqtk-indexing = ">=0.17.0"
+python = "^3.10"
+six = ">=1.17.0"
+numpy = [
+    # Newer Python versions require NumPy releases with compatible wheels.
+    {version = ">=1.23.5", python = "<3.13"},
+    {version = ">=2.1", python = ">=3.13,<3.14"},
+    {version = ">=2.3.2", python = ">=3.14"},
+]
+smqtk-core = ">=0.22.0"
+smqtk-dataprovider = ">=0.20.0"
+smqtk-classifier = ">=0.21.0"
+smqtk-indexing = ">=0.19.0"
+
+pillow = [
+    {version = ">=12.3.0", python = "<3.11"},
+    {version = ">=13.0.0", python = ">=3.11"}
+]
 
 [tool.poetry.dev-dependencies]
 # CI
-flake8 = "^3.9.0"
-flake8-mutable = "^1.2.0"
-mypy = "^0.812"
+flake8 = ">=3.9.0"
+flake8-mutable = ">=1.2.0"
+mypy = ">=0.991"
+types-six = ">=1.17.0"
 # Docs
 # - Also see: `docs/readthedocs-reqs.txt` for use by RTD
-Sphinx = "^3.5.3"
-sphinx-rtd-theme = "^0.5.1"
-sphinx-argparse = "^0.2.5"
-sphinx-prompt = "^1.4.0"
-livereload = "^2.6.3"
+Sphinx = ">=3.5.3"
+sphinx-rtd-theme = ">=0.5.1"
+sphinx-argparse = ">=0.2.5"
+sphinx-prompt = ">=1.4.0"
+livereload = ">=2.6.3"
+# Security fixes in Tornado 6.6 require Python 3.11 or newer.
+tornado = [
+    {version = ">=6.5.10", python = "<3.11"},
+    {version = ">=6.6", python = ">=3.11"}
+]
 # Testing
-coverage = "^5.5"
-mock = "^4.0.3"
-pytest = "^6.2.2"
-pytest-cov = "^2.11.1"
+coverage = ">=7.10.6"
+diff-cover = {version = ">=11.0.1", python = ">=3.11"}
+mock = ">=4.0.3"
+pytest = ">=9.0.3"
+pytest-cov = ">=2.11.1"
 # Development
-ipython = "^7.16"
-jedi = "^0.17"
+ipython = ">=8.10.0"
 
 [tool.poetry.plugins."smqtk_plugins"]
 # RankRelevancy
@@ -52,11 +78,13 @@ jedi = "^0.17"
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [
-    "-lv",                  # Show local in trace-backs.
-    "--doctest-modules",    # Increased verbosity.
-    "--tb=long",            # Trace-back print mode.
-    "--cov=smqtk_relevancy",# Cover our package specifically
-    "--cov-report=term",    # Coverage report to terminal
+    "-lv",                          # Show local in trace-backs.
+    "--doctest-modules",            # Increased verbosity.
+    "--tb=long",                    # Trace-back print mode.
+    "--cov=./smqtk_relevancy",      # Cover our package specifically
+    "--cov=./tests",                # Also cover our tests for dead spots
+    "--cov-report=term",            # Coverage report to terminal
+    "--cov-report=xml:coverage.xml" # For external tool reporting
 ]
 testpaths = [
     "tests",
@@ -66,3 +94,7 @@ doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "IGNORE_EXCEPTION_DETAIL",
 ]
+
+[tool.coverage.run]
+source = ["smqtk_relevancy", "tests"]
+relative_files = true

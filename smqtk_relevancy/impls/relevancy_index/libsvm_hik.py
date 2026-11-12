@@ -267,7 +267,10 @@ class LibSvmHikRelevancyIndex (RelevancyIndex):
             for d in n_iterable:
                 train_labels.append(-1)
                 # noinspection PyTypeChecker
-                train_vectors.append(d.vector().tolist())
+                vector = d.vector()
+                if vector is None:
+                    raise ValueError("Negative descriptor has no vector.")
+                train_vectors.append(vector.tolist())
                 num_neg += 1
 
         if not num_pos:
