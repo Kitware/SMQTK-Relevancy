@@ -4,10 +4,23 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+* Updated supported Python versions to 3.10 through 3.14.
+
+* Updated CI to use ``actions/setup-python`` on Ubuntu 24.04 instead of job
+  containers to avoid container registry pull limits.
+
+* Updated NumPy requirements to match the other SMQTK packages and refreshed
+  dependency requirements for supported Python versions and security fixes.
+
+* Required SMQTK-Core 0.22.0, SMQTK-Dataprovider 0.20.0, SMQTK-Classifier
+  0.21.0, and SMQTK-Indexing 0.19.0 for Python 3.14 support and NumPy 2
+  compatibility.
+
 CI
 
-* Updated CI unittests workflow to include codecov reporting.
-  Reduced CodeCov report submission by skipping this step on scheduled runs.
+* Replaced Codecov uploads with coverage checks and reports in GitHub Actions.
+  Combined coverage across Python versions and retained the existing package,
+  test, and changed-line coverage thresholds. Reports are retained for seven days.
 
 Documentation
 
@@ -15,6 +28,13 @@ Documentation
 
 Fixes
 -----
+
+* Explicitly installed the configured Sphinx theme in Read the Docs builds.
+
+* Refreshed locked dependencies to address security advisories.
+
+* Required Tornado 6.6 or newer on Python 3.11 and newer to address security
+  advisories in the documentation and notebook dependencies.
 
 CI
 
@@ -28,3 +48,11 @@ Dependency Versions
 
 * Removed `jedi = "^0.17"` requirement and updated to `ipython = "^7.17.3"`
   since recent ipython update appropriately addresses the dependency.
+
+Known Issues
+------------
+
+* Python 3.10 retains Pillow 12.3.0 and Tornado 6.5.10 because their patched
+  releases require Python 3.11. Newer Pillow and Tornado security advisories
+  remain unresolved on Python 3.10; Python 3.11 and newer require Pillow 13
+  and Tornado 6.6 with these fixes.
